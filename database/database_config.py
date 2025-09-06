@@ -14,4 +14,4 @@ DATABASE_URL = "postgresql://population_user:population123@localhost:5432/popula
 # 1. Update the DATABASE_URL above with your actual PostgreSQL credentials
 # 2. Make sure PostgreSQL is running
 # 3. Run: python setup_postgres.py
-# 4. Start the app: streamlit run "population density.py"
+# 4. Start the app: streamlit run "population_density.py"

@@ -87,7 +87,7 @@ setup_database()
 source ~/.pyenv/versions/3.12.9/envs/streamlit_venv/bin/activate
 
 # Run the Streamlit app
-streamlit run "population density.py"
+streamlit run "population_density.py"
 ```
 
 ### 2. Login Process
