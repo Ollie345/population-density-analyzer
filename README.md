@@ -6,9 +6,13 @@ A comprehensive Streamlit web application for analyzing population density data 
 
 ### ✅ Core Functionality
 - **Interactive Data Visualization**: Plotly charts for population analysis
-- **Geographic Mapping**: Kepler.gl choropleth maps for spatial data
+- **Advanced Geographic Mapping**: Kepler.gl choropleth maps for spatial data with layer management
 - **CSV Data Processing**: Automatic data cleaning and type conversion
-- **Real-time Filtering**: Dynamic state-based data filtering
+- **Real-time Filtering**: Dynamic multi-layer filtering by economic class, status, and custom criteria
+- **Layer Management**: Load default layers (Population, Markets, Outlets) with button controls
+- **Customer Data Upload**: File upload with validation for CSV datasets
+- **Export Features**: Download filtered datasets as CSV files
+- **Data Validation**: Comprehensive validation for uploaded data (coordinates, file size, required fields)
 
 ### 🔐 Authentication & Security
 - **PostgreSQL Authentication**: Secure database-backed user management
@@ -20,6 +24,28 @@ A comprehensive Streamlit web application for analyzing population density data 
 - **Admin Dashboard**: User creation and management interface
 - **Activity Logging**: Track user login times and activities
 - **Multi-user Support**: Concurrent user access with individual sessions
+
+### 🎛️ Advanced Spatial Analysis Features
+- **Default Data Layers**: Pre-loaded Population, Market, and Outlet datasets
+- **Layer Transparency**: Opacity controls for overlapping layers
+- **Multi-layer Filtering**: Filter by economic class, status, and custom criteria
+- **Customer Data Integration**: Upload and overlay custom datasets
+- **Export Capabilities**: Download filtered datasets and combined results
+- **Real-time Updates**: Dynamic map updates without page refresh
+
+## 🚀 Quick Start
+
+### 📦 Deployment Notes
+- **Streamlit Cloud**: Uses `packages.txt` for system dependencies
+- **PyArrow**: Version 15.0.2 is pinned to use pre-built wheels
+- **Build Tools**: cmake and build-essential are included in packages.txt
+- **Python Version**: Compatible with Python 3.8+
+
+### 🔧 Troubleshooting Deployment Issues
+If you encounter pyarrow build errors during deployment:
+1. The `packages.txt` file includes necessary build tools
+2. Specific package versions are pinned to avoid compilation issues
+3. All dependencies use versions with available pre-built wheels
 
 ## 🚀 Quick Start
 

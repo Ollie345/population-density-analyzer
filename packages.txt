@@ -1,0 +1,12 @@
+# System dependencies for Streamlit Cloud deployment
+# This file tells Streamlit Cloud to install these system packages before Python dependencies
+
+# Build tools for compiling packages
+build-essential
+cmake
+
+# Development libraries
+libpq-dev
+libssl-dev
+libffi-dev
+python3-dev

@@ -1,0 +1,3 @@
+# Python version for Streamlit Cloud deployment
+# This ensures compatibility with the pinned package versions
+python-3.11.9

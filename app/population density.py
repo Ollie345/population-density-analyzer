@@ -375,6 +375,202 @@ with st.sidebar:
     # Add user management for admin
     user_management_section()
 
+    # Advanced Layer Controls - Always visible
+    st.markdown("---")
+    st.subheader("🎛️ Spatial Analysis Layers")
+
+    # Initialize session state for data layers
+    if 'layer_data' not in st.session_state:
+        st.session_state.layer_data = {}
+    if 'polygons' not in st.session_state:
+        st.session_state.polygons = []
+    if 'uploaded_files' not in st.session_state:
+        st.session_state.uploaded_files = {}
+
+    # Default Data Layers
+    st.markdown("### 📊 Default Layers")
+
+    if st.button("📍 Load Population Density", key="load_population"):
+        try:
+            pop_df = pd.read_csv("docs/data/Population_Density.csv")
+            st.session_state.layer_data['population_density'] = {
+                'data': pop_df,
+                'type': 'choropleth',
+                'visible': True,
+                'opacity': 0.7
+            }
+            st.success("✅ Population Density layer loaded!")
+        except Exception as e:
+            st.error(f"❌ Error loading population data: {str(e)}")
+
+    if st.button("🏪 Load Market Data", key="load_markets"):
+        try:
+            market_df = pd.read_csv("docs/data/Open_Market_Data.csv")
+            st.session_state.layer_data['market_data'] = {
+                'data': market_df,
+                'type': 'points',
+                'visible': True,
+                'opacity': 0.8
+            }
+            st.success("✅ Market Data layer loaded!")
+        except Exception as e:
+            st.error(f"❌ Error loading market data: {str(e)}")
+
+    if st.button("🏬 Load Outlet Data", key="load_outlets"):
+        try:
+            outlet_df = pd.read_csv("docs/data/Outlet_Data.csv")
+            st.session_state.layer_data['outlet_data'] = {
+                'data': outlet_df,
+                'type': 'points',
+                'visible': True,
+                'opacity': 0.8
+            }
+            st.success("✅ Outlet Data layer loaded!")
+        except Exception as e:
+            st.error(f"❌ Error loading outlet data: {str(e)}")
+
+    # Layer Visibility Controls
+    if st.session_state.layer_data:
+        st.markdown("### 👁️ Layer Visibility & Filters")
+        for layer_name, layer_info in st.session_state.layer_data.items():
+            with st.expander(f"⚙️ {layer_name.replace('_', ' ').title()}", expanded=False):
+                layer_info['visible'] = st.checkbox(
+                    "Show Layer",
+                    value=layer_info['visible'],
+                    key=f"visible_{layer_name}"
+                )
+
+                if layer_info['visible']:
+                    layer_info['opacity'] = st.slider(
+                        "Opacity",
+                        0.0, 1.0, layer_info['opacity'],
+                        key=f"opacity_{layer_name}"
+                    )
+
+                    # Add filtering options based on layer type
+                    df = layer_info['data']
+                    if 'economic_class' in df.columns:
+                        classes = df['economic_class'].unique()
+                        selected_classes = st.multiselect(
+                            "Economic Class Filter",
+                            classes,
+                            default=classes,
+                            key=f"filter_class_{layer_name}"
+                        )
+                        if len(selected_classes) != len(classes):
+                            # Filter the data
+                            filtered_df = df[df['economic_class'].isin(selected_classes)]
+                            st.session_state.layer_data[layer_name]['data'] = filtered_df
+                            st.info(f"Filtered to {len(filtered_df)} records")
+
+                    if 'status' in df.columns:
+                        statuses = df['status'].unique()
+                        selected_statuses = st.multiselect(
+                            "Status Filter",
+                            statuses,
+                            default=statuses,
+                            key=f"filter_status_{layer_name}"
+                        )
+                        if len(selected_statuses) != len(statuses):
+                            filtered_df = df[df['status'].isin(selected_statuses)]
+                            st.session_state.layer_data[layer_name]['data'] = filtered_df
+                            st.info(f"Filtered to {len(filtered_df)} records")
+
+    # Customer Data Upload
+    st.markdown("### 📤 Customer Data Upload")
+    uploaded_file = st.file_uploader(
+        "Upload CSV or GeoJSON",
+        type=['csv', 'geojson'],
+        key="customer_upload"
+    )
+
+    if uploaded_file is not None:
+        try:
+            if uploaded_file.name.endswith('.csv'):
+                customer_df = pd.read_csv(uploaded_file)
+
+                # Validate the data
+                is_valid, validation_message = validate_csv_data(customer_df)
+                if is_valid:
+                    layer_name = f"customer_{uploaded_file.name.split('.')[0]}"
+                    st.session_state.layer_data[layer_name] = {
+                        'data': customer_df,
+                        'type': 'points',
+                        'visible': True,
+                        'opacity': 0.8
+                    }
+                    st.success(f"✅ {uploaded_file.name} uploaded successfully!")
+                    st.info(f"📊 Loaded {len(customer_df)} records")
+                else:
+                    st.error(f"❌ Validation failed: {validation_message}")
+
+            elif uploaded_file.name.endswith('.geojson'):
+                st.info("🗺️ GeoJSON support coming soon!")
+                st.info("💡 For now, please convert to CSV format with lat/lon columns")
+            else:
+                st.error("❌ Unsupported file format. Please upload CSV or GeoJSON files.")
+
+        except Exception as e:
+            st.error(f"❌ Error processing file: {str(e)}")
+            st.info("💡 Check that your CSV has proper column headers and data formatting")
+
+    # Export Options
+    if st.session_state.layer_data:
+        st.markdown("### 💾 Export Options")
+
+        # Combined data export
+        if st.button("📊 Export Combined Dataset", key="export_combined"):
+            if st.session_state.layer_data:
+                combined_data = []
+                for layer_name, layer_info in st.session_state.layer_data.items():
+                    if layer_info['visible']:
+                        df = layer_info['data'].copy()
+                        df['layer_type'] = layer_name
+                        combined_data.append(df)
+
+                if combined_data:
+                    final_df = pd.concat(combined_data, ignore_index=True)
+                    csv_data = final_df.to_csv(index=False)
+                    st.download_button(
+                        label="📥 Download Combined CSV",
+                        data=csv_data,
+                        file_name="combined_spatial_data.csv",
+                        mime="text/csv",
+                        key="download_combined"
+                    )
+
+        # Individual layer exports
+        if st.session_state.layer_data:
+            st.markdown("#### Individual Layer Exports")
+            for layer_name, layer_info in st.session_state.layer_data.items():
+                if layer_info['visible']:
+                    csv_data = layer_info['data'].to_csv(index=False)
+                    st.download_button(
+                        label=f"📥 Download {layer_name.replace('_', ' ').title()}",
+                        data=csv_data,
+                        file_name=f"{layer_name}.csv",
+                        mime="text/csv",
+                        key=f"download_{layer_name}"
+                    )
+
+    # Periodic Refresh Settings
+    st.markdown("### 🔄 Auto Refresh")
+    refresh_interval = st.selectbox(
+        "Refresh Interval",
+        ["Off", "30 seconds", "1 minute", "5 minutes"],
+        key="refresh_interval"
+    )
+    if refresh_interval != "Off":
+        st.info(f"🔄 Map will refresh every {refresh_interval}")
+
+    # Spatial Analysis Tools
+    st.markdown("### 🎯 Spatial Analysis")
+    if st.button("📏 Distance Analysis", key="distance_analysis"):
+        st.info("Distance analysis tools will be available")
+
+    if st.button("📍 Buffer Analysis", key="buffer_analysis"):
+        st.info("Buffer analysis tools coming soon")
+
 st.sidebar.header("Data Input")
 option = st.sidebar.radio("Choose input type:", ["Upload CSV", "Paste Text"])
 
@@ -459,210 +655,9 @@ if df is not None and not df.empty:
     # Advanced Kepler.gl Map with Functional Requirements
     st.subheader("🗺️ Advanced Kepler.gl Spatial Analysis Platform")
 
-    # Initialize session state for data layers
-    if 'layer_data' not in st.session_state:
-        st.session_state.layer_data = {}
-    if 'polygons' not in st.session_state:
-        st.session_state.polygons = []
-    if 'uploaded_files' not in st.session_state:
-        st.session_state.uploaded_files = {}
 
-    # Sidebar for layer controls
-    with st.sidebar:
-        st.subheader("🎛️ Layer Controls")
+    # Create Kepler map with all layers
 
-        # Default Data Layers
-        st.markdown("### 📊 Default Layers")
-
-        if st.button("📍 Load Population Density", key="load_population"):
-            try:
-                pop_df = pd.read_csv("docs/data/Population_Density.csv")
-                st.session_state.layer_data['population_density'] = {
-                    'data': pop_df,
-                    'type': 'choropleth',
-                    'visible': True,
-                    'opacity': 0.7
-                }
-                st.success("✅ Population Density layer loaded!")
-            except Exception as e:
-                st.error(f"❌ Error loading population data: {str(e)}")
-
-        if st.button("🏪 Load Market Data", key="load_markets"):
-            try:
-                market_df = pd.read_csv("docs/data/Open_Market_Data.csv")
-                st.session_state.layer_data['market_data'] = {
-                    'data': market_df,
-                    'type': 'points',
-                    'visible': True,
-                    'opacity': 0.8
-                }
-                st.success("✅ Market Data layer loaded!")
-            except Exception as e:
-                st.error(f"❌ Error loading market data: {str(e)}")
-
-        if st.button("🏬 Load Outlet Data", key="load_outlets"):
-            try:
-                outlet_df = pd.read_csv("docs/data/Outlet_Data.csv")
-                st.session_state.layer_data['outlet_data'] = {
-                    'data': outlet_df,
-                    'type': 'points',
-                    'visible': True,
-                    'opacity': 0.8
-                }
-                st.success("✅ Outlet Data layer loaded!")
-            except Exception as e:
-                st.error(f"❌ Error loading outlet data: {str(e)}")
-
-        # Layer Visibility Controls
-        st.markdown("### 👁️ Layer Visibility & Filters")
-        for layer_name, layer_info in st.session_state.layer_data.items():
-            with st.expander(f"⚙️ {layer_name.replace('_', ' ').title()}", expanded=False):
-                layer_info['visible'] = st.checkbox(
-                    "Show Layer",
-                    value=layer_info['visible'],
-                    key=f"visible_{layer_name}"
-                )
-
-                if layer_info['visible']:
-                    layer_info['opacity'] = st.slider(
-                        "Opacity",
-                        0.0, 1.0, layer_info['opacity'],
-                        key=f"opacity_{layer_name}"
-                    )
-
-                    # Add filtering options based on layer type
-                    df = layer_info['data']
-                    if 'economic_class' in df.columns:
-                        classes = df['economic_class'].unique()
-                        selected_classes = st.multiselect(
-                            "Economic Class Filter",
-                            classes,
-                            default=classes,
-                            key=f"filter_class_{layer_name}"
-                        )
-                        if len(selected_classes) != len(classes):
-                            # Filter the data
-                            filtered_df = df[df['economic_class'].isin(selected_classes)]
-                            st.session_state.layer_data[layer_name]['data'] = filtered_df
-                            st.info(f"Filtered to {len(filtered_df)} records")
-
-                    if 'status' in df.columns:
-                        statuses = df['status'].unique()
-                        selected_statuses = st.multiselect(
-                            "Status Filter",
-                            statuses,
-                            default=statuses,
-                            key=f"filter_status_{layer_name}"
-                        )
-                        if len(selected_statuses) != len(statuses):
-                            filtered_df = df[df['status'].isin(selected_statuses)]
-                            st.session_state.layer_data[layer_name]['data'] = filtered_df
-                            st.info(f"Filtered to {len(filtered_df)} records")
-
-        # Customer Data Upload
-        st.markdown("### 📤 Customer Data Upload")
-        uploaded_file = st.file_uploader(
-            "Upload CSV or GeoJSON",
-            type=['csv', 'geojson'],
-            key="customer_upload"
-        )
-
-        if uploaded_file is not None:
-            try:
-                if uploaded_file.name.endswith('.csv'):
-                    customer_df = pd.read_csv(uploaded_file)
-
-                    # Validate the data
-                    is_valid, validation_message = validate_csv_data(customer_df)
-                    if is_valid:
-                        layer_name = f"customer_{uploaded_file.name.split('.')[0]}"
-                        st.session_state.layer_data[layer_name] = {
-                            'data': customer_df,
-                            'type': 'points',
-                            'visible': True,
-                            'opacity': 0.8
-                        }
-                        st.success(f"✅ {uploaded_file.name} uploaded successfully!")
-                        st.info(f"📊 Loaded {len(customer_df)} records")
-                    else:
-                        st.error(f"❌ Validation failed: {validation_message}")
-
-                elif uploaded_file.name.endswith('.geojson'):
-                    st.info("🗺️ GeoJSON support coming soon!")
-                    st.info("💡 For now, please convert to CSV format with lat/lon columns")
-                else:
-                    st.error("❌ Unsupported file format. Please upload CSV or GeoJSON files.")
-
-            except Exception as e:
-                st.error(f"❌ Error processing file: {str(e)}")
-                st.info("💡 Check that your CSV has proper column headers and data formatting")
-
-        # Polygon Drawing Tools
-        st.markdown("### 🎨 Polygon Analysis")
-        if st.button("🔲 Draw Polygon", key="draw_polygon"):
-            st.info("🖱️ Click on the map to draw polygons for spatial analysis")
-
-        # Export Options
-        st.markdown("### 💾 Export Options")
-
-        # Combined data export
-        if st.button("📊 Export Combined Dataset", key="export_combined"):
-            if st.session_state.layer_data:
-                combined_data = []
-                for layer_name, layer_info in st.session_state.layer_data.items():
-                    if layer_info['visible']:
-                        df = layer_info['data'].copy()
-                        df['layer_type'] = layer_name
-                        combined_data.append(df)
-
-                if combined_data:
-                    final_df = pd.concat(combined_data, ignore_index=True)
-                    csv_data = final_df.to_csv(index=False)
-                    st.download_button(
-                        label="📥 Download Combined CSV",
-                        data=csv_data,
-                        file_name="combined_spatial_data.csv",
-                        mime="text/csv",
-                        key="download_combined"
-                    )
-
-        # Individual layer exports
-        if st.session_state.layer_data:
-            st.markdown("#### Individual Layer Exports")
-            for layer_name, layer_info in st.session_state.layer_data.items():
-                if layer_info['visible']:
-                    csv_data = layer_info['data'].to_csv(index=False)
-                    st.download_button(
-                        label=f"📥 Download {layer_name.replace('_', ' ').title()}",
-                        data=csv_data,
-                        file_name=f"{layer_name}.csv",
-                        mime="text/csv",
-                        key=f"download_{layer_name}"
-                    )
-
-        # Map snapshot (placeholder for now)
-        if st.button("🖼️ Export Map Snapshot", key="export_map"):
-            st.info("Map snapshot export will be available in future updates")
-
-        # Periodic Refresh Settings
-        st.markdown("### 🔄 Auto Refresh")
-        refresh_interval = st.selectbox(
-            "Refresh Interval",
-            ["Off", "30 seconds", "1 minute", "5 minutes"],
-            key="refresh_interval"
-        )
-        if refresh_interval != "Off":
-            st.info(f"🔄 Map will refresh every {refresh_interval}")
-
-        # Spatial Analysis Tools
-        st.markdown("### 🎯 Spatial Analysis")
-        if st.button("📏 Distance Analysis", key="distance_analysis"):
-            st.info("Distance analysis tools will be available")
-
-        if st.button("📍 Buffer Analysis", key="buffer_analysis"):
-            st.info("Buffer analysis tools coming soon")
-
-    # Create Kepler map with enhanced configuration
     config = {
         'version': 'v1',
         'config': {
@@ -700,8 +695,8 @@ if df is not None and not df.empty:
             # Rename columns for Kepler
             kepler_data = layer_data.copy()
             column_mapping = {
-                'latitude': 'Latitude',
-                'longitude': 'Longitude',
+        'latitude': 'Latitude',
+        'longitude': 'Longitude',
                 'lat': 'Latitude',
                 'lon': 'Longitude',
                 'lng': 'Longitude'
@@ -719,7 +714,6 @@ if df is not None and not df.empty:
 
     # Display the map
     keplergl_static(kepler_map)
-
     # Data Summary
     st.markdown("### 📊 Layer Summary")
     if st.session_state.layer_data:
@@ -737,7 +731,6 @@ if df is not None and not df.empty:
         st.dataframe(summary_df)
     else:
         st.info("👆 Load default layers or upload customer data to get started!")
-
     # Density analysis
     st.subheader("🌍 Population Density")
     # Use area_km if available, otherwise fallback to areakm
