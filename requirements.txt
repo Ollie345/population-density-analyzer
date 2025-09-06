@@ -1,0 +1,24 @@
+# Core Dependencies
+streamlit>=1.28.0
+pandas>=2.0.0
+plotly>=5.0.0
+psycopg2-binary>=2.9.0
+sqlalchemy>=2.0.0
+
+# Kepler.gl Integration
+streamlit-keplergl>=0.3.0
+keplergl>=0.3.7
+
+# Geographic Data Processing
+geopandas>=1.0.0
+shapely>=2.0.0
+
+# Data Processing
+numpy>=1.24.0
+openpyxl>=3.1.0
+
+# Web Requests (if needed)
+requests>=2.31.0
+
+# Environment Variables
+python-dotenv>=1.0.0
