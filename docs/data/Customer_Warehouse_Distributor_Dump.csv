@@ -1,0 +1,6 @@
+warehouse_id,distributor_name,location_type,latitude,longitude,city,state,capacity,product_category,status
+WH001,Central Distribution,Warehouse,9.0765,7.3986,Abuja,Abuja,50000,Electronics,Active
+WH002,Lagos Hub,Distribution Center,6.5244,3.3792,Lagos,Lagos,75000,Grocery,Active
+WH003,Northern Depot,Warehouse,12.0022,8.5919,Kano,Kano,45000,Clothing,Active
+WH004,Western Facility,Distribution Center,7.3775,3.9470,Ibadan,Oyo,60000,Books,Active
+WH005,Southern Terminal,Warehouse,4.8156,7.0498,Port Harcourt,Rivers,55000,Appliances,Active

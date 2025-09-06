@@ -1,0 +1,10 @@
+date,customer_id,outlet_name,sales_amount,units_sold,category,latitude,longitude
+2024-09-01,CUST001,Tech Hub Store,150000,45,Electronics,9.0765,7.3986
+2024-09-01,CUST002,Grocery Plus,200000,120,Grocery,6.5244,3.3792
+2024-09-01,CUST003,Fashion Corner,85000,30,Clothing,12.0022,8.5919
+2024-09-02,CUST001,Tech Hub Store,180000,52,Electronics,9.0765,7.3986
+2024-09-02,CUST002,Grocery Plus,220000,135,Grocery,6.5244,3.3792
+2024-09-02,CUST004,Book World,45000,25,Books,7.3775,3.9470
+2024-09-03,CUST001,Tech Hub Store,165000,48,Electronics,9.0765,7.3986
+2024-09-03,CUST003,Fashion Corner,92000,35,Clothing,12.0022,8.5919
+2024-09-03,CUST005,Electronics Hub,135000,40,Appliances,4.8156,7.0498

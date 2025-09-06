@@ -1,0 +1,6 @@
+customer_id,outlet_name,outlet_type,latitude,longitude,city,state,status,last_updated
+CUST001,Tech Hub Store,Electronics,9.0765,7.3986,Abuja,Abuja,Active,2024-09-06
+CUST002,Grocery Plus,Supermarket,6.5244,3.3792,Lagos,Lagos,Active,2024-09-06
+CUST003,Fashion Corner,Clothing,12.0022,8.5919,Kano,Kano,Active,2024-09-06
+CUST004,Book World,Bookstore,7.3775,3.9470,Ibadan,Oyo,Active,2024-09-06
+CUST005,Electronics Hub,Appliances,4.8156,7.0498,Port Harcourt,Rivers,Active,2024-09-06

@@ -1,0 +1,11 @@
+outlet_name,outlet_type,latitude,longitude,state,lga,status,monthly_sales,employees,economic_class
+Shoprite Abuja,Supermarket,9.0765,7.3986,Abuja,Abuja Municipal,Active,2500000,45,High
+Next Cash Lagos,Convenience Store,6.5244,3.3792,Lagos,Lagos Mainland,Active,1800000,25,High
+Kano Mall,Shopping Mall,12.0022,8.5919,Kano,Kano Municipal,Active,3200000,80,Medium
+Ibadan Plaza,Department Store,7.3775,3.9470,Oyo,Ibadan North,Active,1500000,35,Medium
+Port Harcourt Mall,Shopping Center,4.8156,7.0498,Rivers,Port Harcourt,Active,2800000,60,High
+Benin Shop,Local Store,6.3392,5.6170,Edo,Benin City,Active,800000,15,Medium
+Kaduna Store,General Store,10.5105,7.4165,Kaduna,Kaduna North,Active,950000,20,Medium
+Enugu Mart,Minimart,6.4590,7.5460,Enugu,Enugu North,Active,600000,12,Low
+Owerri Outlet,Retail Outlet,5.4850,7.0350,Imo,Owerri,Active,700000,18,Low
+Aba Shop,Corner Shop,5.1167,7.3667,Abia,Aba,Active,450000,10,Low

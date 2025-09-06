@@ -1,0 +1,11 @@
+lga,state,population,latitude,longitude,area_km,density_per_km2,economic_class
+Abuja Municipal,Abuja,2000000,9.0765,7.3986,200,10000,High
+Lagos Mainland,Lagos,1500000,6.5244,3.3792,150,10000,High
+Kano Municipal,Kano,1200000,12.0022,8.5919,180,6667,Medium
+Ibadan North,Oyo,1000000,7.3775,3.9470,120,8333,Medium
+Port Harcourt,Rivers,800000,4.8156,7.0498,100,8000,High
+Benin City,Edo,600000,6.3392,5.6170,80,7500,Medium
+Kaduna North,Kaduna,500000,10.5105,7.4165,70,7143,Medium
+Enugu North,Enugu,400000,6.4590,7.5460,60,6667,Low
+Owerri,Imo,300000,5.4850,7.0350,50,6000,Low
+Aba,Abia,250000,5.1167,7.3667,45,5556,Low

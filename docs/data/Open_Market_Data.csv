@@ -1,0 +1,11 @@
+market_name,market_type,latitude,longitude,state,lga,stalls,avg_daily_turnover,status,economic_class
+Wuse Market,General Market,9.0765,7.3986,Abuja,Abuja Municipal,150,500000,Active,High
+Lagos Central Market,Fish Market,6.5244,3.3792,Lagos,Lagos Mainland,200,750000,Active,High
+Kano Central Market,Grain Market,12.0022,8.5919,Kano,Kano Municipal,180,400000,Active,Medium
+Ibadan Dugbe Market,Yam Market,7.3775,3.9470,Oyo,Ibadan North,120,350000,Active,Medium
+Port Harcourt Market,Oil Market,4.8156,7.0498,Rivers,Port Harcourt,100,600000,Active,High
+Benin King Square,Herbs Market,6.3392,5.6170,Edo,Benin City,80,250000,Active,Medium
+Kaduna Central,Textile Market,10.5105,7.4165,Kaduna,Kaduna North,90,300000,Active,Medium
+Enugu Market,Cassava Market,6.4590,7.5460,Enugu,Enugu North,70,200000,Active,Low
+Owerri Eke Market,Palm Oil Market,5.4850,7.0350,Imo,Owerri,60,180000,Active,Low
+Aba Market,Cement Market,5.1167,7.3667,Abia,Aba,50,150000,Active,Low
